@@ -510,6 +510,7 @@ sqlst34 = """SELECT action_date_fiscal_year, base_and_exercised_options_value, f
 base_and_all_options_value, action_date, recipient_duns, recipient_name
 FROM usaspending."{0}_analysis_n1" 
 where solicitation_procedures_code = 'NP' and action_date_fiscal_year <> '2020' and modification_number ='0'
+--and base_and_exercised_options_value >0
 order by action_date_fiscal_year
 """
 
@@ -517,6 +518,7 @@ sqlst35 = """SELECT action_date_fiscal_year, count(contract_award_unique_key) as
 count(distinct recipient_duns) as vendors, sum(base_and_exercised_options_value) as awardvalue
 FROM usaspending."{0}_analysis_n1" 
 where solicitation_procedures_code = 'NP' and action_date_fiscal_year <> '2020'and modification_number ='0'
+--and base_and_exercised_options_value >0
 group by action_date_fiscal_year
 order by action_date_fiscal_year
 """
@@ -528,3 +530,9 @@ FROM usaspending."{0}_analysis_n1"
 where solicitation_procedures_code = 'NP' and 
 action_date_fiscal_year = '{1}' and modification_number ='0'
 """
+
+sqlst37 = """SELECT action_date_fiscal_year::text, allaward, 
+filteredaward FROM usaspending."allagency2" 
+where action_date_fiscal_year::int <> 2020
+and agency_abb = '{0}' order by action_date_fiscal_year"""
+
