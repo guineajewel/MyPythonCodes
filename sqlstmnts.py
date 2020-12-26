@@ -536,3 +536,62 @@ filteredaward FROM usaspending."allagency2"
 where action_date_fiscal_year::int <> 2020
 and agency_abb = '{0}' order by action_date_fiscal_year"""
 
+
+sqlst38 = """SELECT x.action_date_fiscal_year, y.allaward, y.allawardtotal, x.filteredaward, x.filteredawardtotal 
+FROM 
+(SELECT count(distinct contract_award_unique_key) as filteredaward, action_date_fiscal_year,
+  sum(base_and_all_options_value)::float8::numeric::money as filteredawardtotal 
+ FROM usaspending."{0}_analysis_n1" 
+ where modification_number ='0' and action_date_fiscal_year::int <> 2020
+ group by action_date_fiscal_year) as x
+LEFT JOIN
+(SELECT count(distinct contract_award_unique_key) as allaward, action_date_fiscal_year,
+ sum(base_and_all_options_value)::float8::numeric::money as allawardtotal
+ FROM usaspending."{0}_Cnt1" group by action_date_fiscal_year) as y
+ ON x.action_date_fiscal_year = y.action_date_fiscal_year """
+
+sqlst39 = """SELECT action_date_fiscal_year, base_and_exercised_options_value, federal_action_obligation,
+base_and_all_options_value, action_date, recipient_duns, recipient_name
+FROM usaspending."{0}_analysis_n1" 
+where action_date_fiscal_year <> '2020' and modification_number ='0'
+order by action_date_fiscal_year
+"""
+
+sqlst40 = """SELECT action_date_fiscal_year, count(contract_award_unique_key) as noofaward,
+count(distinct recipient_duns) as vendors, sum(base_and_exercised_options_value) as awardvalue
+FROM usaspending."{0}_analysis_n1" 
+where action_date_fiscal_year <> '2020' and modification_number ='0'
+group by action_date_fiscal_year
+order by action_date_fiscal_year
+"""
+
+sqlst41 = """Select count(distinct x.contract_award_unique_key) as nooffilteredaward, 
+sum(x.total) as awardvalue, count(distinct x.recipient_duns) as noofvendors 
+FROM (Select count(*) as noofactions, contract_award_unique_key, 
+sum(base_and_all_options_value)::float8::numeric::money as total
+, recipient_duns , recipient_name 
+from usaspending."{0}_analysis_n1"
+where modification_number ='0' and action_date_fiscal_year::int <> 2020
+group by contract_award_unique_key, recipient_duns ,recipient_name order by total desc
+) as x
+"""
+
+sqlst42 = """Select count(distinct contract_award_unique_key) as NoOfAward, 
+sum(base_and_all_options_value)::float8::numeric::money as total, 
+recipient_duns, recipient_name from usaspending."{0}_analysis_n1"
+where solicitation_procedures_code = 'NP'
+-- and action_date_fiscal_year in ('2017','2018','2019') -- uncomment this line if you only consider these years
+and modification_number ='0'
+and action_date_fiscal_year::int <> 2020
+group by recipient_duns, recipient_name order by total desc limit 15"""
+
+sqlst43 = """Select contract_award_unique_key, base_and_exercised_options_value,
+action_date_fiscal_year, period_of_performance_start_date, 
+period_of_performance_current_end_date, product_or_service_code,
+product_or_service_code_description,
+recipient_duns, recipient_name, extent_competed, period_of_performance_potential_end_date,
+solicitation_procedures, naics_code, naics_description, usaspending_permalink, 
+number_of_offers_received::int from usaspending."{0}_analysis_n1" 
+where recipient_duns='{1}' and action_date_fiscal_year::int <> 2020
+and modification_number ='0'
+"""

@@ -46,13 +46,13 @@ df = pd.read_sql_query('SELECT * FROM usaspending."allagency2" where action_date
 df[df.columns[4]] = df[df.columns[4]].replace('[\$,]', '', regex=True).astype(float)
 
 
-pivot_df = df.pivot(index='action_date_fiscal_year', columns='agency_abb', values='allaward')
+#pivot_df = df.pivot(index='action_date_fiscal_year', columns='agency_abb', values='allaward')
 #pivot_df = df.pivot(index='action_date_fiscal_year', columns='agency_abb', values='filteredaward')
-#pivot_df = df.pivot(index='action_date_fiscal_year', columns='agency_abb', values='filteredawardtotal')
+pivot_df = df.pivot(index='action_date_fiscal_year', columns='agency_abb', values='filteredawardtotal')
 
-pivot_df.to_csv ('rda/AllCumulativeCounts2.csv', header=True)
+#pivot_df.to_csv ('rda/AllCumulativeCounts2.csv', header=True)
 #pivot_df.to_csv ('rda/FilteredCumulativeCounts2.csv', header=True)
-#pivot_df.to_csv ('rda/AwardTotal2.csv', header=True)
+pivot_df.to_csv ('rda/AwardTotal2.csv', header=True)
 
 matplotlib.style.use('ggplot')
 pivot_df.loc[:,['DHS', 'DOC', 'DOD', 'DOJ', 'GSA', 'HHS', 'SEC', 'TREAS', 'USDA', 'VA']] \
@@ -60,9 +60,9 @@ pivot_df.loc[:,['DHS', 'DOC', 'DOD', 'DOJ', 'GSA', 'HHS', 'SEC', 'TREAS', 'USDA'
 
 
 plt.xlabel('Fiscal Year')
-plt.ylabel('Unfiltered Award Count - Cumulative', fontsize=8)
+#plt.ylabel('Unfiltered Award Count - Cumulative', fontsize=8)
 #plt.ylabel('Filtered Award Count - Cumulative')
-#plt.ylabel('Filtered Award $ Value - Cumulative')
+plt.ylabel('Filtered Award $ Value - Cumulative')
 plt.title('Cumulative Award Data 2009-2019 FY', fontsize=18)
 
 
@@ -78,9 +78,9 @@ plt.gca().yaxis.set_major_formatter(y_format)
 plt.legend(loc="lower right", bbox_to_anchor=(.5, .75) , borderaxespad=0., ncol=2, )
 
 
-filename = 'figs/AllCumulativeCounts2.png'
+#filename = 'figs/AllCumulativeCounts2.png'
 #filename = 'figs/FilteredCumulativeCounts2.png'
-#filename = 'figs/FilteredAwardCumulativeValue2.png'
+filename = 'figs/FilteredAwardCumulativeValue2.png'
 plt.savefig(filename, dpi=300)
 
 plt.show()
