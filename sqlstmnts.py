@@ -595,3 +595,38 @@ number_of_offers_received::int from usaspending."{0}_analysis_n1"
 where recipient_duns='{1}' and action_date_fiscal_year::int <> 2020
 and modification_number ='0'
 """
+
+
+# sqlst44 = """
+# SELECT recipient_duns FROM usaspending."{0}_analysis_n1" 
+# where solicitation_procedures_code = 'NP' and modification_number ='0' 
+# and action_date_fiscal_year = '{1}'
+# """
+
+# sqlst45 = """
+# SELECT recipient_duns FROM usaspending."{0}_analysis_n1" 
+# where solicitation_procedures_code = 'NP' and modification_number ='0' 
+# and action_date_fiscal_year = '{1}'
+# INTERSECT
+# SELECT recipient_duns FROM usaspending."DHS_analysis_n1" 
+# where solicitation_procedures_code = 'NP' and modification_number ='0' 
+# and action_date_fiscal_year = '{2}'
+# """
+
+
+sqlst44 = """Select recipient_duns from usaspending."{0}_analysis_n1"
+where solicitation_procedures_code = 'NP' and modification_number ='0'
+and action_date_fiscal_year::int <> 2020
+"""
+
+sqlst45 = """
+SELECT recipient_duns FROM usaspending."{0}_analysis_n1" 
+where solicitation_procedures_code = 'NP' and modification_number ='0' 
+and action_date_fiscal_year = '{1}'
+and action_date_fiscal_year::int <> 2020
+INTERSECT
+SELECT recipient_duns FROM usaspending."{0}_analysis_n1" 
+where solicitation_procedures_code = 'NP' and modification_number ='0' 
+and action_date_fiscal_year = '{2}'
+and action_date_fiscal_year::int <> 2020
+"""
